@@ -9,7 +9,7 @@ const User = require("../models/user");
 authRouter.post("/signup", async (req, res) => {
   try {
     // Validate the request body
-    validateSignupData(req.body);
+    validateSignupData(req);
 
     // Encrypt the password
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -54,6 +54,15 @@ authRouter.post("/login", async (req, res) => {
       httpOnly: true,
     });
     res.send("Login successful");
+  } catch (error) {
+    res.status(500).send(`Internal server error: ${error.message}`);
+  }
+});
+
+// logout route
+authRouter.post("/logout", async (req, res) => {
+  try {
+    res.clearCookie("token").send("Logout successful");
   } catch (error) {
     res.status(500).send(`Internal server error: ${error.message}`);
   }
