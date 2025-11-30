@@ -24,9 +24,15 @@ authRouter.post("/signup", async (req, res) => {
 
     // saving the user to the database
     await user.save();
-    res.send("User created successfully");
+    res.json({
+      success: true,
+      message: "User created successfully",
+    });
   } catch (error) {
-    res.status(500).send(`Internal server error: ${error.message}`);
+    res.status(400).json({
+      success: false,
+      message: `ERROR: ${error.message}`,
+    });
   }
 });
 
@@ -53,18 +59,32 @@ authRouter.post("/login", async (req, res) => {
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       httpOnly: true,
     });
-    res.send("Login successful");
+
+    res.json({
+      success: true,
+      message: "Login successful",
+    });
   } catch (error) {
-    res.status(500).send(`Internal server error: ${error.message}`);
+    res.status(400).json({
+      success: false,
+      message: `ERROR: ${error.message}`,
+    });
   }
 });
 
 // logout route
 authRouter.post("/logout", async (req, res) => {
   try {
-    res.clearCookie("token").send("Logout successful");
+    res.clearCookie("token");
+    res.json({
+      success: true,
+      message: "Logout successful",
+    });
   } catch (error) {
-    res.status(500).send(`Internal server error: ${error.message}`);
+    res.status(400).json({
+      success: false,
+      message: `ERROR: ${error.message}`,
+    });
   }
 });
 
